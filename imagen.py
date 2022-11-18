@@ -11,8 +11,8 @@ class Imagen:
     #haciendo a la imagen
     imagen=None
     contornos=None
-    sigmaPB=0.2
-    sigmaPA=0.1
+    sigmaPB=0.1
+    sigmaPA=0.001
     #Creamos el constructor de la clase Imagen
     def __init__(self,miimagen):
 
@@ -25,15 +25,25 @@ class Imagen:
         self.imagen=np.float64(self.imagen)
         #Aplicamos el preprocesamiento
         self.preProcesamiento()
-        #Aplicamos filtro pasa bajo para eliminar el ruido
-        self.aplicarFiltro("PB")
-        #Luego aplicamos el filtro para alto para resaltar los bordes
-        self.aplicarFiltro("PA")
-        #Aplicamos la binarizacion a la imagen
-        #self.imagen=cv2.Canny(self.imagen,10,150)
-        _, self.imagen = cv2.threshold(self.imagen, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_TRIANGLE)
-        #Aplicamos el metodo de busqueda de contornos
-        self.findContornos()
+        #Creamos un manejo de excepcion para solucionar el error ZeroDivision
+        while(True):
+            try:
+                #Aplicamos filtro pasa bajo para eliminar el ruido
+                self.aplicarFiltro("PB")
+                #Luego aplicamos el filtro para alto para resaltar los bordes
+                self.aplicarFiltro("PA")
+                #Aplicamos la binarizacion a la imagen
+                #self.imagen=cv2.Canny(self.imagen,10,150)
+                _, self.imagen = cv2.threshold(self.imagen, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_TRIANGLE)
+                #Aplicamos el metodo de busqueda de contornos
+                self.findContornos()
+                #Creamos el vector de caracteristicas
+                self.getCaractVector()
+                break
+            except ZeroDivisionError:
+                self.sigmaPB-=0.01
+                self.sigmaPA+=0.001
+                continue
         
         
     def preProcesamiento(self):
@@ -75,68 +85,58 @@ class Imagen:
 
         #Buscamos los puntos de contorno
         self.contornos,_=cv2.findContours(self.imagen,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+        #Buscamos los puntos de contorno que me llevan al casco convexo
+        self.contornos = sorted(self.contornos,key=cv2.contourArea,reverse=True)[:1]
+        # Defectos convexos
+        hull = cv2.convexHull(self.contornos[0],returnPoints=False)
+        self.defectosConvex = cv2.convexityDefects(self.contornos[0],hull)
 
 
     def getCaractVector(self):
         #Creamos el vector de caracteristicas
-        caractVector=[]
+        self.caractVector=[]
         #Llenamos el vector de caracteristicas con las distintas caract. geometricas
         areafig=cv2.contourArea(self.contornos[0])
         perimetrofig=cv2.arcLength(self.contornos[0],True)
-        #while(True):
-           # try:
-                #Mientras mas cerca de uno la circularidad, mas se parece a un circulo perfecto
-        circularidad=(4*(m.pi)*areafig)/(perimetrofig)**2
-        caractVector.append(circularidad)
-        #break
-        #except ZeroDivisionError:
-        #circularidad=1
-        #break
         
+        #Calculamos la circularidad
+        #Mientras mas cerca de uno la circularidad, mas se parece a un circulo perfecto
+        circularidad=(4*(m.pi)*areafig)/(perimetrofig)**2
+        self.caractVector.append(circularidad)
+
+        
+        #Calculamos la elasticidad
         #La elasticidad es lo mismo que el aspect ratio (width(ancho)/length(altura))
         #Utilizamos boundingRect
         #Si es 1 es un cuadrado perfecto, may a 1 estirado horizontal, menor a 1, estirado vertical
         _,_,ancho,alto=cv2.boundingRect(self.contornos[0])
         elasticidad=float(ancho)/alto
-        caractVector.append(elasticidad)
-        return caractVector
+        self.caractVector.append(elasticidad)
+
+        #Realizamos una aprox polinomial que nos servira de parametro
+        #Lo que vamos a hacer es sumar al vect. de caracteristicas la cantidad de elementos de approxPoly
+        #Este numero de elementos corresponde a los "vertices de la figura"
+        #Esto es especialmente util para diferencial la arandela de la tuerca
+
+        epsilon=0.05*cv2.arcLength(self.contornos[0],True)
+        approxPoly=cv2.approxPolyDP(self.contornos[0],epsilon,True)
+        self.caractVector.append(len(approxPoly))
+
+        #Obtenemos el 3 momento de hu de la imagen
+        #huMoments=cv2.HuMoments(cv2.moments(self.contornos[0]))
+        #self.caractVector.append(huMoments[2][0])
+
+        
+
+
 #Fin de deficion de clase
 
-#Espacio de prueba
 
-#Cargamos la imagen
-arandelaimg=cv2.imread("arandela.jpg")
-arandela=Imagen("arandela.jpg")
-arandelaimg=cv2.resize(arandelaimg,(512,512))
-cv2.drawContours(arandelaimg,arandela.contornos,-1,(0,255,0),2)
-cv2.imshow("Arandela",arandelaimg)
-cv2.waitKey(0)
-cv2.imshow("ArandelaTrazo",arandela.imagen)
-cv2.waitKey(0)
-print(arandela.getCaractVector())
-cv2.destroyAllWindows()
 
-clavoimg=cv2.imread("tornillo2.jpg")
-clavo=Imagen("tornillo2.jpg")
-clavoimg=cv2.resize(clavoimg,(512,512))
-cv2.drawContours(clavoimg,clavo.contornos,-1,(0,255,0),2)
-cv2.imshow("Tornillo",clavoimg)
-cv2.waitKey(0)
-cv2.imshow("TornilloTrazo",clavo.imagen)
-cv2.waitKey(0)
-print(clavo.getCaractVector())
-cv2.destroyAllWindows()
 
-clavoimg=cv2.imread("clavo.png")
-clavo=Imagen("clavo.png")
-clavoimg=cv2.resize(clavoimg,(512,512))
-cv2.drawContours(clavoimg,clavo.contornos,-1,(0,255,0),2)
-cv2.imshow("Clavo",clavoimg)
-cv2.waitKey(0)
-cv2.imshow("ClavoTrazo",clavo.imagen)
-cv2.waitKey(0)
-print(clavo.getCaractVector())
-cv2.destroyAllWindows()
+
+
+
 
 
 
