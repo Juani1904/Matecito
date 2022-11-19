@@ -6,7 +6,8 @@ import math as m
 
 #Importamos el modulo donde hacemos la definicion de clase Imagen
 from imagen import Imagen
-
+#Importamos el modulo donde hacemos la definicion de la clase Kmeans
+from kmeans import Kmeans
 #Cargamos las imagenes de la base de datos
 #--------------------------BASE DE DATOS-----------------------------------
 print("ARANDELAS")
@@ -19,13 +20,13 @@ for nombre in cargaArandelas:
     arandelaimg.append(cv2.imread(nombre))
     arandela.append(Imagen(nombre))
     arandelaimg[i]=(cv2.resize(arandelaimg[i],(512,512)))
-    cv2.drawContours(arandelaimg[i],arandela[i].contornos,-1,(0,255,0),2)
-    cv2.imshow("Arandela",arandelaimg[i])
-    cv2.waitKey(0)
-    cv2.imshow("ArandelaTrazo",arandela[i].imagen)
-    cv2.waitKey(0)
+    #cv2.drawContours(arandelaimg[i],arandela[i].contornos,-1,(0,255,0),2)
+    #cv2.imshow("Arandela",arandelaimg[i])
+    #cv2.waitKey(0)
+    #cv2.imshow("ArandelaTrazo",arandela[i].imagen)
+    #cv2.waitKey(0)
     print(arandela[i].caractVector)
-    cv2.destroyAllWindows()
+    #cv2.destroyAllWindows()
 
 print("CLAVOS")
 #CLAVOS
@@ -37,13 +38,13 @@ for nombre in cargaClavos:
     clavoimg.append(cv2.imread(nombre))
     clavo.append(Imagen(nombre))
     clavoimg[i]=(cv2.resize(clavoimg[i],(512,512)))
-    cv2.drawContours(clavoimg[i],clavo[i].contornos,-1,(0,255,0),2)
-    cv2.imshow("Clavo",clavoimg[i])
-    cv2.waitKey(0)
-    cv2.imshow("ClavoTrazo",clavo[i].imagen)
-    cv2.waitKey(0)
+    #cv2.drawContours(clavoimg[i],clavo[i].contornos,-1,(0,255,0),2)
+    #cv2.imshow("Clavo",clavoimg[i])
+    #cv2.waitKey(0)
+    #cv2.imshow("ClavoTrazo",clavo[i].imagen)
+    #cv2.waitKey(0)
     print(clavo[i].caractVector)
-    cv2.destroyAllWindows()
+    #cv2.destroyAllWindows()
 
 print("TORNILLOS")
 #TORNILLOS
@@ -55,13 +56,13 @@ for nombre in cargaTornillos:
     tornilloimg.append(cv2.imread(nombre))
     tornillo.append(Imagen(nombre))
     tornilloimg[i]=(cv2.resize(tornilloimg[i],(512,512)))
-    cv2.drawContours(tornilloimg[i],tornillo[i].contornos,-1,(0,255,0),2)
-    cv2.imshow("Tornillo",tornilloimg[i])
-    cv2.waitKey(0)
-    cv2.imshow("TornilloTrazo",tornillo[i].imagen)
-    cv2.waitKey(0)
+    #cv2.drawContours(tornilloimg[i],tornillo[i].contornos,-1,(0,255,0),2)
+    #cv2.imshow("Tornillo",tornilloimg[i])
+    #cv2.waitKey(0)
+    #cv2.imshow("TornilloTrazo",tornillo[i].imagen)
+    #cv2.waitKey(0)
     print(tornillo[i].caractVector)
-    cv2.destroyAllWindows()
+    #cv2.destroyAllWindows()
 
 print("TUERCAS")
 #TUERCAS
@@ -73,15 +74,28 @@ for nombre in cargaTuercas:
     tuercaimg.append(cv2.imread(nombre))
     tuerca.append(Imagen(nombre))
     tuercaimg[i]=(cv2.resize(tuercaimg[i],(512,512)))
-    cv2.drawContours(tuercaimg[i],tuerca[i].contornos,-1,(0,255,0),2)
-    cv2.imshow("Tuerca",tuercaimg[i])
-    cv2.waitKey(0)
-    cv2.imshow("TuercaTrazo",tuerca[i].imagen)
-    cv2.waitKey(0)
+    #cv2.drawContours(tuercaimg[i],tuerca[i].contornos,-1,(0,255,0),2)
+    #cv2.imshow("Tuerca",tuercaimg[i])
+    #cv2.waitKey(0)
+    #cv2.imshow("TuercaTrazo",tuerca[i].imagen)
+    #cv2.waitKey(0)
     print(tuerca[i].caractVector)
-    cv2.destroyAllWindows()
+    #cv2.destroyAllWindows()
 
 #--------------------------FIN BASE DE DATOS-----------------------------------
+
+#Implementamos el algoritmo Kmeans para realizar la segmentacion de la imagen
+catalog=Kmeans(arandela,tuerca,clavo,tornillo)
+for i in range(20):
+    catalog.catalogador()
+    catalog.recalcularCentroide()
+
+catalog.guardarImagenes()
+
+
+
+
+
 
 #Ahora graficamos los valores en 3D, a un costado figuran los nombres y color de las piezas
 #--------------------------GRAFICACION-----------------------------------
@@ -103,6 +117,12 @@ for i in range(len(tornillo)):
 for i in range(len(tuerca)):
     ax.scatter(tuerca[i].caractVector[0],tuerca[i].caractVector[1],tuerca[i].caractVector[2],c='y',marker='o')
     ax.text(tuerca[i].caractVector[0],tuerca[i].caractVector[1],tuerca[i].caractVector[2],  '%s' % (str(cargaTuercas[i])), size=5, zorder=1, color='k')
+
+#Graficamos las imagenes desconocidas
+for i in range(len(catalog.imagenes)):
+    ax.scatter(catalog.imagenes[i].caractVector[0],catalog.imagenes[i].caractVector[1],catalog.imagenes[i].caractVector[2],c='k',marker='o')
+    ax.text(catalog.imagenes[i].caractVector[0],catalog.imagenes[i].caractVector[1],catalog.imagenes[i].caractVector[2],  '%s' % (str("imagen")), size=5, zorder=1, color='k')
+
 ax.set_xlabel('Circularidad')
 ax.set_ylabel('Elasticidad')
 ax.set_zlabel('Vertices de aprox')
