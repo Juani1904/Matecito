@@ -25,6 +25,16 @@ class Knn:
         self.imagenes=[]
         for filename in os.listdir("Input"):
             self.imagenes.append(Imagen("Input/"+filename))
+            ind=os.listdir("Input").index(filename)
+            mostrarimg=self.imagenes[ind].imagenOrig
+            cv2.drawContours(mostrarimg,self.imagenes[ind].contornos,-1,(0,255,0),2)
+            cv2.imshow(filename,mostrarimg)
+            cv2.waitKey(0)
+            cv2.imshow("Trazo "+str(filename),self.imagenes[ind].imagen)
+            cv2.waitKey(0)
+            print("Imagen "+str(ind+1))
+            print(self.imagenes[ind].caractVector)
+            cv2.destroyAllWindows()
         
         #Definimos el vector de etiquetas. Como este algoritmo es supervisado, el prellenado
         #de los valores de etiqueta no sera "Desconocido", si no con el nombre de la pieza de la base de datos
@@ -118,12 +128,12 @@ class Knn:
                     index = distimg4.index(distancia)
                     respimg4.append(self.etiquetas[index])
 
-        #Ahora actualizamos en minimo de cada imagen por 1000 (numero grande), para, en el caso que
-        #K>1 podamos tomar los K-1 valores minimos restantes
-        distimg1[distimg1.index(min(distimg1))] = 1000
-        distimg2[distimg2.index(min(distimg2))] = 1000
-        distimg3[distimg3.index(min(distimg3))] = 1000
-        distimg4[distimg4.index(min(distimg4))] = 1000
+            #Ahora actualizamos en minimo de cada imagen por 1000 (numero grande), para, en el caso que
+            #K>1 podamos tomar los K-1 valores minimos restantes
+            distimg1[distimg1.index(min(distimg1))] = 1000
+            distimg2[distimg2.index(min(distimg2))] = 1000
+            distimg3[distimg3.index(min(distimg3))] = 1000
+            distimg4[distimg4.index(min(distimg4))] = 1000
 
         #Para graficar las esferas creamos el siguiente vector
         #Cuando salgamos de la funcion clasificador, los valores del vector corresponderan
@@ -247,18 +257,16 @@ class Knn:
         ax.scatter(0,0,0,c='yellow',marker='o',label='Tuerca')
         ax.scatter(0,0,0,c='k',marker='o',label='Desconocido')
         ax.legend()
-
         #Graficamos las esferas (No se nota mucho porque van a ser muy chicas. Hacerle zoom)
-        for i in range(len(self.piezas)):
-            u = np.linspace(0, 2 * np.pi, 100)
-            v = np.linspace(0, np.pi, 100)
-            x = np.outer(np.cos(u), np.sin(v))*self.distEsferas[i]
-            y = np.outer(np.sin(u), np.sin(v))*self.distEsferas[i]
-            z = np.outer(np.ones(np.size(u)), np.cos(v))*self.distEsferas[i]
-            ax.plot_surface(x+self.imagenes[i].caractVector[0], y+self.imagenes[i].caractVector[1], z+self.imagenes[i].caractVector[2], color='b',alpha=0.1)
-            ax.plot_wireframe(x+self.imagenes[i].caractVector[0], y+self.imagenes[i].caractVector[1], z+self.imagenes[i].caractVector[2], color="k")
-
         
+        for i in range(len(self.piezas)):
+
+            u,v = np.mgrid[0:2*np.pi:20j, 0:np.pi:10j]
+            x=np.cos(u)*np.sin(v)
+            y=np.sin(u)*np.sin(v)
+            z=np.cos(v)
+            r=self.distEsferas[i]
+            ax.plot_wireframe(x*r+self.imagenes[i].caractVector[0], y*r+self.imagenes[i].caractVector[1], z*r+self.imagenes[i].caractVector[2], color="black")
         plt.show()
 
         

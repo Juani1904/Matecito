@@ -12,7 +12,7 @@ import time
 class Kmeans:
 
     #Definimos el constructor
-    def __init__(self,miarandela,mituerca,miclavo,mitornillo,K=4):
+    def __init__(self,miarandela,mituerca,miclavo,mitornillo):
         #Incluimos los objetos creados en el main, para poder comunicarnos con ellos
         self.arandelas=miarandela
         self.tuercas=mituerca
@@ -23,8 +23,16 @@ class Kmeans:
         self.imagenes=[]
         for filename in os.listdir("Input"):
             self.imagenes.append(Imagen("Input/"+filename))
-        #Definimos el numero de clusters
-        self.K=K
+            ind=os.listdir("Input").index(filename)
+            mostrarimg=self.imagenes[ind].imagenOrig
+            cv2.drawContours(mostrarimg,self.imagenes[ind].contornos,-1,(0,255,0),2)
+            cv2.imshow(filename,mostrarimg)
+            cv2.waitKey(0)
+            cv2.imshow("Trazo "+str(filename),self.imagenes[ind].imagen)
+            cv2.waitKey(0)
+            print("Imagen "+str(ind+1))
+            print(self.imagenes[ind].caractVector)
+            cv2.destroyAllWindows()
         #Definimos el numero de iteraciones
         self.iteraciones=10
         #Definimos los centroides
@@ -190,7 +198,7 @@ class Kmeans:
         ax.set_xlabel('Elasticidad')
         ax.set_ylabel('AproxPoly')
         ax.set_zlabel('1er Momento Hu')
-        ax.set_title("Grafica Kmeans. Iteracion "+str(iteracion))
+        ax.set_title("Grafica Kmeans. Iteracion "+str(iteracion+1))
         #Colocamos una leyenda para clasificar las piezas por su color
         ax.scatter(0,0,0,c="red",marker="o",label="Arandela")
         ax.scatter(0,0,0,c="yellow",marker="o",label="Tuerca")
@@ -229,29 +237,7 @@ class Kmeans:
 
         
 
-"""
-for i in range(len(self.arandelas)):
-            ax.scatter(self.arandelas[i].caractVector[1],self.arandelas[i].caractVector[1],self.arandelas[i].caractVector[2],c='r',marker='o')
-            ax.text(self.arandelas[i].caractVector[1],self.arandelas[i].caractVector[1],self.arandelas[i].caractVector[2],  '%s' % (str("A")), size=8, zorder=1, color='k')
-        #Graficamos los clavos
-        for i in range(len(self.clavos)):
-            ax.scatter(self.clavos[i].caractVector[1],self.clavos[i].caractVector[1],self.clavos[i].caractVector[2],c='b',marker='o')
-            ax.text(self.clavos[i].caractVector[1],self.clavos[i].caractVector[1],self.clavos[i].caractVector[2],  '%s' % (str("C")), size=8, zorder=1, color='k')
-        #Graficamos los tornillos
-        for i in range(len(self.tornillos)):
-            ax.scatter(self.tornillos[i].caractVector[1],self.tornillos[i].caractVector[1],self.tornillos[i].caractVector[2],c='g',marker='o')
-            ax.text(self.tornillos[i].caractVector[1],self.tornillos[i].caractVector[1],self.tornillos[i].caractVector[2],  '%s' % (str("To")), size=8, zorder=1, color='k')
-        #Graficamos las tuercas
-        for i in range(len(self.tuercas)):
-            ax.scatter(self.tuercas[i].caractVector[1],self.tuercas[i].caractVector[1],self.tuercas[i].caractVector[2],c='y',marker='o')
-            ax.text(self.tuercas[i].caractVector[1],self.tuercas[i].caractVector[1],self.tuercas[i].caractVector[2],  '%s' % (str("Tu")), size=8, zorder=1, color='k')
 
-        #Graficamos las imagenes desconocidas
-        for i in range(len(self.imagenes)):
-            ax.scatter(self.puntos[i][1],self.puntos[i][1],self.puntos[i][2],c='k',marker='o')
-            ax.text(self.puntos[i][1],self.puntos[i][1],self.puntos[i][2],  '%s' % (str("D")), size=8, zorder=1, color='k')
-    
-"""
 
 
     

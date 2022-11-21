@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import cm
 import cv2
 import math as m
 
@@ -21,7 +20,7 @@ class Imagen:
         self.imagenOrig=cv2.imread(miimagen)
         #Una vez obtenida la imagen, la redimensionamos a 512x512px
         self.imagen=cv2.resize(self.imagen,(512,512))
-        self.imagenOrig=cv2.imread(miimagen)
+        self.imagenOrig=cv2.resize(self.imagenOrig,(512,512))
         #Pasamos la imagen a escala de grises
         self.imagen=cv2.cvtColor(self.imagen,cv2.COLOR_RGB2GRAY)
         #Establecemos el tipo de dato de intensidad como float
