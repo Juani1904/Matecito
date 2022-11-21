@@ -91,12 +91,14 @@ catalog1=Kmeans(arandela,tuerca,clavo,tornillo)
 for i in range(20):
     catalog1.catalogador()
     catalog1.recalcularCentroide()
-
+    
 catalog1.guardarImagenes()
+#Graficamos los puntos de la DB y los de las imagenes desconocidas
+catalog1.Graficador()
 
 #Implementamos el algoritmo Knn para realizar la clasificacion de la imagen
 catalog2=Knn(arandela,tuerca,clavo,tornillo)
-catalog2.clasificador(2)
+catalog2.clasificador(2) #Utilizamos el clasificador con un numero de vecinos igual a K=2
 catalog2.guardarImagenes()
 
 
@@ -128,9 +130,9 @@ for i in range(len(catalog.imagenes)):
     ax.scatter(catalog.imagenes[i].caractVector[0],catalog.imagenes[i].caractVector[1],catalog.imagenes[i].caractVector[2],c='k',marker='o')
     ax.text(catalog.imagenes[i].caractVector[0],catalog.imagenes[i].caractVector[1],catalog.imagenes[i].caractVector[2],  '%s' % (str("imagen")), size=5, zorder=1, color='k')
 
-ax.set_xlabel('Circularidad')
-ax.set_ylabel('Elasticidad')
-ax.set_zlabel('Vertices de aprox')
+ax.set_xlabel('Elasticidad')
+ax.set_ylabel('AproxPoly')
+ax.set_zlabel('1er Momento Hu')
 plt.show()
 #--------------------------FIN GRAFICACION-----------------------------------
 

@@ -159,19 +159,53 @@ class Kmeans:
     
     #Definimos el metodo para guardar las 4 imagenes ahora catalogadas segun su etiqueta, en la carpeta Output, con su nombre particular
     def guardarImagenes(self):
+        #Primero borramos los archivos que pudieran haber en la carpeta output
+        for archivo in os.listdir("Output/Kmeans/"):
+            os.remove("Output/Kmeans/"+archivo)
+        #Ahora guardamos las imagenes
         for imagen in self.imagenes:
             time.sleep(1)
             i=self.imagenes.index(imagen)
             if self.etiquetas[20+i]=="Arandela":
-                cv2.imwrite("Output/Kmeans/"+str(i+1)+".Arandela.jpg",imagen.imagen)
+                cv2.imwrite("Output/Kmeans/"+str(i+1)+".Arandela.jpg",imagen.imagenOrig)
             elif self.etiquetas[20+i]=="Tuerca":
-                cv2.imwrite("Output/Kmeans/"+str(i+1)+".Tuerca.jpg",imagen.imagen)
+                cv2.imwrite("Output/Kmeans/"+str(i+1)+".Tuerca.jpg",imagen.imagenOrig)
             elif self.etiquetas[20+i]=="Clavo":
-                cv2.imwrite("Output/Kmeans/"+str(i+1)+".Clavo.jpg",imagen.imagen)
+                cv2.imwrite("Output/Kmeans/"+str(i+1)+".Clavo.jpg",imagen.imagenOrig)
             elif self.etiquetas[20+i]=="Tornillo":
-                cv2.imwrite("Output/Kmeans/"+str(i+1)+".Tornillo.jpg",imagen.imagen)
+                cv2.imwrite("Output/Kmeans/"+str(i+1)+".Tornillo.jpg",imagen.imagenOrig)
         
-        print("Imagenes guardadas en la carpeta Output/Knn")
+        print("Imagenes guardadas en la carpeta Output/Kmeans")
+    
+    def Graficador(self):
+        #Graficamos las arandelas
+        fig = plt.figure("Grafica Kmeans")
+        ax = fig.add_subplot(111, projection='3d')
+        for i in range(len(self.arandelas)):
+            ax.scatter(self.arandelas[i].caractVector[0],self.arandelas[i].caractVector[1],self.arandelas[i].caractVector[2],c='r',marker='o')
+            ax.text(self.arandelas[i].caractVector[0],self.arandelas[i].caractVector[1],self.arandelas[i].caractVector[2],  '%s' % (str("A")), size=8, zorder=1, color='k')
+        #Graficamos los clavos
+        for i in range(len(self.clavos)):
+            ax.scatter(self.clavos[i].caractVector[0],self.clavos[i].caractVector[1],self.clavos[i].caractVector[2],c='b',marker='o')
+            ax.text(self.clavos[i].caractVector[0],self.clavos[i].caractVector[1],self.clavos[i].caractVector[2],  '%s' % (str("C")), size=8, zorder=1, color='k')
+        #Graficamos los tornillos
+        for i in range(len(self.tornillos)):
+            ax.scatter(self.tornillos[i].caractVector[0],self.tornillos[i].caractVector[1],self.tornillos[i].caractVector[2],c='g',marker='o')
+            ax.text(self.tornillos[i].caractVector[0],self.tornillos[i].caractVector[1],self.tornillos[i].caractVector[2],  '%s' % (str("To")), size=8, zorder=1, color='k')
+        #Graficamos las tuercas
+        for i in range(len(self.tuercas)):
+            ax.scatter(self.tuercas[i].caractVector[0],self.tuercas[i].caractVector[1],self.tuercas[i].caractVector[2],c='y',marker='o')
+            ax.text(self.tuercas[i].caractVector[0],self.tuercas[i].caractVector[1],self.tuercas[i].caractVector[2],  '%s' % (str("Tu")), size=8, zorder=1, color='k')
+
+        #Graficamos las imagenes desconocidas
+        for i in range(len(self.imagenes)):
+            ax.scatter(self.imagenes[i].caractVector[0],self.imagenes[i].caractVector[1],self.imagenes[i].caractVector[2],c='k',marker='o')
+            ax.text(self.imagenes[i].caractVector[0],self.imagenes[i].caractVector[1],self.imagenes[i].caractVector[2],  '%s' % (str("D")), size=8, zorder=1, color='k')
+
+        ax.set_xlabel('Elasticidad')
+        ax.set_ylabel('AproxPoly')
+        ax.set_zlabel('1er Momento Hu')
+        plt.show()
         
 
 

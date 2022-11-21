@@ -10,6 +10,7 @@ class Imagen:
     #La idea es tener un solo atributo imagen, y que ese atributo se vaya modificando segun lo que le vayamos
     #haciendo a la imagen
     imagen=None
+    imagenOrig=None
     contornos=None
     sigmaPB=0.1
     sigmaPA=0.001
@@ -17,8 +18,10 @@ class Imagen:
     def __init__(self,miimagen):
 
         self.imagen=cv2.imread(miimagen)
+        self.imagenOrig=cv2.imread(miimagen)
         #Una vez obtenida la imagen, la redimensionamos a 512x512px
         self.imagen=cv2.resize(self.imagen,(512,512))
+        self.imagenOrig=cv2.imread(miimagen)
         #Pasamos la imagen a escala de grises
         self.imagen=cv2.cvtColor(self.imagen,cv2.COLOR_RGB2GRAY)
         #Establecemos el tipo de dato de intensidad como float
