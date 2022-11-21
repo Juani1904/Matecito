@@ -171,6 +171,8 @@ class Kmeans:
             elif self.etiquetas[20+i]=="Tornillo":
                 cv2.imwrite("Output/Kmeans/"+str(i+1)+".Tornillo.jpg",imagen.imagen)
         
+        print("Imagenes guardadas en la carpeta Output/Knn")
+        
 
 
 

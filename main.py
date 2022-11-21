@@ -8,6 +8,8 @@ import math as m
 from imagen import Imagen
 #Importamos el modulo donde hacemos la definicion de la clase Kmeans
 from kmeans import Kmeans
+#Importamos el modulo donde hacemos la definicion de la clase Knn
+from knn import Knn
 #Cargamos las imagenes de la base de datos
 #--------------------------BASE DE DATOS-----------------------------------
 print("ARANDELAS")
@@ -85,18 +87,21 @@ for nombre in cargaTuercas:
 #--------------------------FIN BASE DE DATOS-----------------------------------
 
 #Implementamos el algoritmo Kmeans para realizar la segmentacion de la imagen
-catalog=Kmeans(arandela,tuerca,clavo,tornillo)
+catalog1=Kmeans(arandela,tuerca,clavo,tornillo)
 for i in range(20):
-    catalog.catalogador()
-    catalog.recalcularCentroide()
+    catalog1.catalogador()
+    catalog1.recalcularCentroide()
 
-catalog.guardarImagenes()
+catalog1.guardarImagenes()
+
+#Implementamos el algoritmo Knn para realizar la clasificacion de la imagen
+catalog2=Knn(arandela,tuerca,clavo,tornillo)
+catalog2.clasificador(2)
+catalog2.guardarImagenes()
 
 
 
-
-
-
+"""
 #Ahora graficamos los valores en 3D, a un costado figuran los nombres y color de las piezas
 #--------------------------GRAFICACION-----------------------------------
 #Graficamos las arandelas
@@ -129,3 +134,4 @@ ax.set_zlabel('Vertices de aprox')
 plt.show()
 #--------------------------FIN GRAFICACION-----------------------------------
 
+"""
