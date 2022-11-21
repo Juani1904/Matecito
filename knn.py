@@ -6,7 +6,6 @@ import math as m
 import os
 from imagen import Imagen
 from random import randint
-from mpl_toolkits.mplot3d import Axes3D
 
 #Ahora vamos a definir la clase Knn
 
