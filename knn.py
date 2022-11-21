@@ -6,7 +6,7 @@ import math as m
 import os
 from imagen import Imagen
 from random import randint
-import time
+from mpl_toolkits.mplot3d import Axes3D
 
 #Ahora vamos a definir la clase Knn
 
@@ -124,6 +124,12 @@ class Knn:
         distimg2[distimg2.index(min(distimg2))] = 1000
         distimg3[distimg3.index(min(distimg3))] = 1000
         distimg4[distimg4.index(min(distimg4))] = 1000
+
+        #Para graficar las esferas creamos el siguiente vector
+        #Cuando salgamos de la funcion clasificador, los valores del vector corresponderan
+        #a los radios de las esferas, que seran las distancias al vecino mas lejano de los K considerados
+        self.distEsferas=[min(distimg1),min(distimg2),min(distimg3),min(distimg4)]
+
         #Ahora vemos cuantas veces aparece cada elemento en las respuestas
         #Las cantidades las almacenamos en diccionarios cuyo nombre clave es el de cada pieza
         #Y el valor es la cantidad de veces que aparece
@@ -205,6 +211,55 @@ class Knn:
                 #cv2.imwrite("Output/Knn/"+str(i+1)+".Desconocido.jpg",imagen.imagenOrig)
         
         print("Imagenes guardadas en la carpeta Output/Knn")
+    
+    def Graficador(self):
+        #En este metodo graficaremos los puntos de cada pieza con distintos colores
+        #Tambien graficaremos los puntos que queremos conocer
+        #Y finalmente una esfera desde el punto que queremos conocer, con radio igual la distancia a los K vecinos
+        #Para esto usaremos la libreria matplotlib
+        #Primero graficaremos los puntos de cada pieza
+        fig = plt.figure("Grafica Knn")
+        ax = fig.add_subplot(111, projection='3d')
+        ax.set_xlabel('Elasticidad')
+        ax.set_ylabel('AproxPoly')
+        ax.set_zlabel('1er Momento Hu')
+        ax.set_title("Grafica Knn")
+        for i in range(len(self.arandelas)):
+            ax.scatter(self.arandelas[i].caractVector[0],self.arandelas[i].caractVector[1],self.arandelas[i].caractVector[2],c='red',marker='o')
+        #Graficamos los clavos
+        for i in range(len(self.clavos)):
+            ax.scatter(self.clavos[i].caractVector[0],self.clavos[i].caractVector[1],self.clavos[i].caractVector[2],c='blue',marker='o')
+        #Graficamos los tornillos
+        for i in range(len(self.tornillos)):
+            ax.scatter(self.tornillos[i].caractVector[0],self.tornillos[i].caractVector[1],self.tornillos[i].caractVector[2],c='green',marker='o')
+        #Graficamos las tuercas
+        for i in range(len(self.tuercas)):
+            ax.scatter(self.tuercas[i].caractVector[0],self.tuercas[i].caractVector[1],self.tuercas[i].caractVector[2],c='yellow',marker='o')
+
+        #Graficamos las imagenes desconocidas
+        for i in range(len(self.imagenes)):
+            ax.scatter(self.imagenes[i].caractVector[0],self.imagenes[i].caractVector[1],self.imagenes[i].caractVector[2],c='k',marker='o')
+
+        #Colocamos una leyenda para clasificar las piezas por su color
+        ax.scatter(0,0,0,c='red',marker='o',label='Arandela')
+        ax.scatter(0,0,0,c='blue',marker='o',label='Clavo')
+        ax.scatter(0,0,0,c='green',marker='o',label='Tornillo')
+        ax.scatter(0,0,0,c='yellow',marker='o',label='Tuerca')
+        ax.scatter(0,0,0,c='k',marker='o',label='Desconocido')
+        ax.legend()
+
+        #Graficamos las esferas (No se nota mucho porque van a ser muy chicas. Hacerle zoom)
+        for i in range(len(self.piezas)):
+            u = np.linspace(0, 2 * np.pi, 100)
+            v = np.linspace(0, np.pi, 100)
+            x = np.outer(np.cos(u), np.sin(v))*self.distEsferas[i]
+            y = np.outer(np.sin(u), np.sin(v))*self.distEsferas[i]
+            z = np.outer(np.ones(np.size(u)), np.cos(v))*self.distEsferas[i]
+            ax.plot_surface(x+self.imagenes[i].caractVector[0], y+self.imagenes[i].caractVector[1], z+self.imagenes[i].caractVector[2], color='b',alpha=0.1)
+            ax.plot_wireframe(x+self.imagenes[i].caractVector[0], y+self.imagenes[i].caractVector[1], z+self.imagenes[i].caractVector[2], color="k")
+
+        
+        plt.show()
 
         
 

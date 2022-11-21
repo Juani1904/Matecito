@@ -38,6 +38,20 @@ class Kmeans:
         for i in range(24):
             self.etiquetas.append("Desconocido")
             self.distancias.append([0,0,0,0])
+        
+        #Armamos una lista con todos los puntos de todas las imagenes, en el mismo orden que antes
+        self.puntos=[]
+        for i in range(5):
+            self.puntos.append(self.arandelas[i].caractVector)
+        for i in range(5):
+            self.puntos.append(self.tuercas[i].caractVector)
+        for i in range(5):
+            self.puntos.append(self.clavos[i].caractVector)
+        for i in range(5):
+            self.puntos.append(self.tornillos[i].caractVector)
+        for i in range(4):
+            self.puntos.append(self.imagenes[i].caractVector)
+
     
     def randomSelectCentroide(self):
         #Los parametros no son mas que vectores o listas de objetos Imagen
@@ -74,37 +88,28 @@ class Kmeans:
 
         #Ahora asignamos las etiquetas
         for distancias in self.distancias:
-            for numero in distancias:
-                minimo=distancias.index(min(distancias))
-                if minimo==0:
-                    self.etiquetas[self.distancias.index(distancias)]="Arandela"
-                elif minimo==1:
-                    self.etiquetas[self.distancias.index(distancias)]="Tuerca"
-                elif minimo==2:
-                    self.etiquetas[self.distancias.index(distancias)]="Clavo"
-                elif minimo==3:
-                    self.etiquetas[self.distancias.index(distancias)]="Tornillo"
-    
+            minimo=distancias.index(min(distancias))
+            if minimo==0:
+                self.etiquetas[self.distancias.index(distancias)]="Arandela"
+            elif minimo==1:
+                self.etiquetas[self.distancias.index(distancias)]="Tuerca"
+            elif minimo==2:
+                self.etiquetas[self.distancias.index(distancias)]="Clavo"
+            elif minimo==3:
+                self.etiquetas[self.distancias.index(distancias)]="Tornillo"
+
+        
+
+
     #Ahora definimos el metodo para recalcular el centroide mediante la media de los puntos de los clusters formados
     def recalcularCentroide(self):
-        #Primero armamos una lista con todos los puntos de todas las imagenes, en el mismo orden que antes
-        puntos=[]
-        for i in range(5):
-            puntos.append(self.arandelas[i].caractVector)
-        for i in range(5):
-            puntos.append(self.tuercas[i].caractVector)
-        for i in range(5):
-            puntos.append(self.clavos[i].caractVector)
-        for i in range(5):
-            puntos.append(self.tornillos[i].caractVector)
-        for i in range(4):
-            puntos.append(self.imagenes[i].caractVector)
         
-        #Ahora calculamos la media aritmetica a lo largo de cada eje
+        
+        #Calculamos la media aritmetica a lo largo de cada eje
         ejeX=[]
         ejeY=[]
         ejeZ=[]
-        for coordenada in puntos:
+        for coordenada in self.puntos:
             X,Y,Z=coordenada
             ejeX.append(X)
             ejeY.append(Y)
@@ -177,34 +182,45 @@ class Kmeans:
         
         print("Imagenes guardadas en la carpeta Output/Kmeans")
     
-    def Graficador(self):
-        #Graficamos las arandelas
+    def Graficador(self,iteracion):
+        #En este metodo graficador lo que haremos sera ir graficando con distintos colores los clusters
+        #que se vayan formando y los centroides (y su recalculo)
         fig = plt.figure("Grafica Kmeans")
         ax = fig.add_subplot(111, projection='3d')
-        for i in range(len(self.arandelas)):
-            ax.scatter(self.arandelas[i].caractVector[0],self.arandelas[i].caractVector[1],self.arandelas[i].caractVector[2],c='r',marker='o')
-            ax.text(self.arandelas[i].caractVector[0],self.arandelas[i].caractVector[1],self.arandelas[i].caractVector[2],  '%s' % (str("A")), size=8, zorder=1, color='k')
-        #Graficamos los clavos
-        for i in range(len(self.clavos)):
-            ax.scatter(self.clavos[i].caractVector[0],self.clavos[i].caractVector[1],self.clavos[i].caractVector[2],c='b',marker='o')
-            ax.text(self.clavos[i].caractVector[0],self.clavos[i].caractVector[1],self.clavos[i].caractVector[2],  '%s' % (str("C")), size=8, zorder=1, color='k')
-        #Graficamos los tornillos
-        for i in range(len(self.tornillos)):
-            ax.scatter(self.tornillos[i].caractVector[0],self.tornillos[i].caractVector[1],self.tornillos[i].caractVector[2],c='g',marker='o')
-            ax.text(self.tornillos[i].caractVector[0],self.tornillos[i].caractVector[1],self.tornillos[i].caractVector[2],  '%s' % (str("To")), size=8, zorder=1, color='k')
-        #Graficamos las tuercas
-        for i in range(len(self.tuercas)):
-            ax.scatter(self.tuercas[i].caractVector[0],self.tuercas[i].caractVector[1],self.tuercas[i].caractVector[2],c='y',marker='o')
-            ax.text(self.tuercas[i].caractVector[0],self.tuercas[i].caractVector[1],self.tuercas[i].caractVector[2],  '%s' % (str("Tu")), size=8, zorder=1, color='k')
-
-        #Graficamos las imagenes desconocidas
-        for i in range(len(self.imagenes)):
-            ax.scatter(self.imagenes[i].caractVector[0],self.imagenes[i].caractVector[1],self.imagenes[i].caractVector[2],c='k',marker='o')
-            ax.text(self.imagenes[i].caractVector[0],self.imagenes[i].caractVector[1],self.imagenes[i].caractVector[2],  '%s' % (str("D")), size=8, zorder=1, color='k')
-
         ax.set_xlabel('Elasticidad')
         ax.set_ylabel('AproxPoly')
         ax.set_zlabel('1er Momento Hu')
+        ax.set_title("Grafica Kmeans. Iteracion "+str(iteracion))
+        #Colocamos una leyenda para clasificar las piezas por su color
+        ax.scatter(0,0,0,c="red",marker="o",label="Arandela")
+        ax.scatter(0,0,0,c="yellow",marker="o",label="Tuerca")
+        ax.scatter(0,0,0,c="blue",marker="o",label="Clavo")
+        ax.scatter(0,0,0,c="green",marker="o",label="Tornillo")
+        ax.scatter(0,0,0,c="black",marker="o",label="Desconocido")
+        ax.legend()
+        #Primero los centroides
+        ax.scatter(self.centroide[0][0],self.centroide[0][1],self.centroide[0][2],c="red",marker="o")
+        ax.scatter(self.centroide[1][0],self.centroide[1][1],self.centroide[1][2],c="yellow",marker="o")
+        ax.scatter(self.centroide[2][0],self.centroide[2][1],self.centroide[2][2],c="blue",marker="o")
+        ax.scatter(self.centroide[3][0],self.centroide[3][1],self.centroide[3][2],c="green",marker="o")
+        #Ahora los puntos, cuando esten sin clasificar iran en negro.
+        #Cuando el algoritmo los clasifique, adquiriran el color que les corresponde
+        for i in range(0,24):
+            if self.puntos[i]!=self.centroide[0] and self.puntos[i]!=self.centroide[1] and self.puntos[i]!=self.centroide[2] and self.puntos[i]!=self.centroide[3]:
+                if self.etiquetas[i]=="Arandela" :
+                    ax.scatter(self.puntos[i][0],self.puntos[i][1],self.puntos[i][2],c="red",marker="o")
+                elif self.etiquetas[i]=="Tuerca":
+                    ax.scatter(self.puntos[i][0],self.puntos[i][1],self.puntos[i][2],c="yellow",marker="o")
+                elif self.etiquetas[i]=="Clavo":
+                    ax.scatter(self.puntos[i][0],self.puntos[i][1],self.puntos[i][2],c="blue",marker="o")
+                elif self.etiquetas[i]=="Tornillo":
+                    ax.scatter(self.puntos[i][0],self.puntos[i][1],self.puntos[i][2],c="green",marker="o")
+                elif self.etiquetas[i]=="Desconocido":
+                    ax.scatter(self.puntos[i][0],self.puntos[i][1],self.puntos[i][2],c="black",marker="o")
+            else:
+                continue
+        #Ahora los puntos, cuando esten clasificados iran en el color de su cluster
+        
         plt.show()
         
 
@@ -213,10 +229,29 @@ class Kmeans:
 
         
 
+"""
+for i in range(len(self.arandelas)):
+            ax.scatter(self.arandelas[i].caractVector[1],self.arandelas[i].caractVector[1],self.arandelas[i].caractVector[2],c='r',marker='o')
+            ax.text(self.arandelas[i].caractVector[1],self.arandelas[i].caractVector[1],self.arandelas[i].caractVector[2],  '%s' % (str("A")), size=8, zorder=1, color='k')
+        #Graficamos los clavos
+        for i in range(len(self.clavos)):
+            ax.scatter(self.clavos[i].caractVector[1],self.clavos[i].caractVector[1],self.clavos[i].caractVector[2],c='b',marker='o')
+            ax.text(self.clavos[i].caractVector[1],self.clavos[i].caractVector[1],self.clavos[i].caractVector[2],  '%s' % (str("C")), size=8, zorder=1, color='k')
+        #Graficamos los tornillos
+        for i in range(len(self.tornillos)):
+            ax.scatter(self.tornillos[i].caractVector[1],self.tornillos[i].caractVector[1],self.tornillos[i].caractVector[2],c='g',marker='o')
+            ax.text(self.tornillos[i].caractVector[1],self.tornillos[i].caractVector[1],self.tornillos[i].caractVector[2],  '%s' % (str("To")), size=8, zorder=1, color='k')
+        #Graficamos las tuercas
+        for i in range(len(self.tuercas)):
+            ax.scatter(self.tuercas[i].caractVector[1],self.tuercas[i].caractVector[1],self.tuercas[i].caractVector[2],c='y',marker='o')
+            ax.text(self.tuercas[i].caractVector[1],self.tuercas[i].caractVector[1],self.tuercas[i].caractVector[2],  '%s' % (str("Tu")), size=8, zorder=1, color='k')
 
-
+        #Graficamos las imagenes desconocidas
+        for i in range(len(self.imagenes)):
+            ax.scatter(self.puntos[i][1],self.puntos[i][1],self.puntos[i][2],c='k',marker='o')
+            ax.text(self.puntos[i][1],self.puntos[i][1],self.puntos[i][2],  '%s' % (str("D")), size=8, zorder=1, color='k')
     
-
+"""
 
 
     

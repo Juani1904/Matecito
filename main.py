@@ -88,52 +88,20 @@ for nombre in cargaTuercas:
 
 #Implementamos el algoritmo Kmeans para realizar la segmentacion de la imagen
 catalog1=Kmeans(arandela,tuerca,clavo,tornillo)
-for i in range(20):
+for i in range(10):
+    catalog1.Graficador(i)
     catalog1.catalogador()
     catalog1.recalcularCentroide()
     
 catalog1.guardarImagenes()
 #Graficamos los puntos de la DB y los de las imagenes desconocidas
-catalog1.Graficador()
+
 
 #Implementamos el algoritmo Knn para realizar la clasificacion de la imagen
 catalog2=Knn(arandela,tuerca,clavo,tornillo)
 catalog2.clasificador(2) #Utilizamos el clasificador con un numero de vecinos igual a K=2
 catalog2.guardarImagenes()
+catalog2.Graficador()
 
 
 
-"""
-#Ahora graficamos los valores en 3D, a un costado figuran los nombres y color de las piezas
-#--------------------------GRAFICACION-----------------------------------
-#Graficamos las arandelas
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-for i in range(len(arandela)):
-    ax.scatter(arandela[i].caractVector[0],arandela[i].caractVector[1],arandela[i].caractVector[2],c='r',marker='o')
-    ax.text(arandela[i].caractVector[0],arandela[i].caractVector[1],arandela[i].caractVector[2],  '%s' % (str(cargaArandelas[i])), size=5, zorder=1, color='k')
-#Graficamos los clavos
-for i in range(len(clavo)):
-    ax.scatter(clavo[i].caractVector[0],clavo[i].caractVector[1],clavo[i].caractVector[2],c='b',marker='o')
-    ax.text(clavo[i].caractVector[0],clavo[i].caractVector[1],clavo[i].caractVector[2],  '%s' % (str(cargaClavos[i])), size=5, zorder=1, color='k')
-#Graficamos los tornillos
-for i in range(len(tornillo)):
-    ax.scatter(tornillo[i].caractVector[0],tornillo[i].caractVector[1],tornillo[i].caractVector[2],c='g',marker='o')
-    ax.text(tornillo[i].caractVector[0],tornillo[i].caractVector[1],tornillo[i].caractVector[2],  '%s' % (str(cargaTornillos[i])), size=5, zorder=1, color='k')
-#Graficamos las tuercas
-for i in range(len(tuerca)):
-    ax.scatter(tuerca[i].caractVector[0],tuerca[i].caractVector[1],tuerca[i].caractVector[2],c='y',marker='o')
-    ax.text(tuerca[i].caractVector[0],tuerca[i].caractVector[1],tuerca[i].caractVector[2],  '%s' % (str(cargaTuercas[i])), size=5, zorder=1, color='k')
-
-#Graficamos las imagenes desconocidas
-for i in range(len(catalog.imagenes)):
-    ax.scatter(catalog.imagenes[i].caractVector[0],catalog.imagenes[i].caractVector[1],catalog.imagenes[i].caractVector[2],c='k',marker='o')
-    ax.text(catalog.imagenes[i].caractVector[0],catalog.imagenes[i].caractVector[1],catalog.imagenes[i].caractVector[2],  '%s' % (str("imagen")), size=5, zorder=1, color='k')
-
-ax.set_xlabel('Elasticidad')
-ax.set_ylabel('AproxPoly')
-ax.set_zlabel('1er Momento Hu')
-plt.show()
-#--------------------------FIN GRAFICACION-----------------------------------
-
-"""
