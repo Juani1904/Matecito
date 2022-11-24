@@ -30,7 +30,7 @@ class Knn:
             cv2.imshow("FiltroPA "+str(filename),self.imagenes[ind].imagenfiltroPA)
             cv2.imshow("Binarizada "+str(filename),self.imagenes[ind].imagen)
             cv2.drawContours(self.imagenes[ind].imagenOrig,self.imagenes[ind].contornos,-1,(0,255,0),2)
-            cv2.imshow(filename,self.imagenes[ind].imagenOrig)
+            cv2.imshow("Contornos "+str(filename),self.imagenes[ind].imagenOrig)
             cv2.waitKey(0)
             fig = plt.figure("Img Dom Frecuencial "+str(filename),figsize=(4, 4))
             plt.imshow(np.log(np.abs(self.imagenes[ind].domFrec)),cmap='gray')

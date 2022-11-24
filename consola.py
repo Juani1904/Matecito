@@ -8,7 +8,7 @@ from knn import Knn
 #Importamos la clase donde se encuentra la base de datos
 from database import Database
 #Importamos el modulo donde se encuentra la clase Nodo y las funciones para aplicar algoritmo A estrella
-#import A_estrella
+import A_estrella
 #Definimos la clase hija Consola, heredada de la clase padre Cmd
 class Consola(Cmd):
 
@@ -57,7 +57,7 @@ class Consola(Cmd):
             print ("No se ha cargado la base de datos. Intente con CARGA_DB")
         except ValueError:
             print ("No se ha cargado la base de datos. Intente con CARGA_DB")
-    """
+
     def do_a_estrella(self,arg):
         'Aplica el algortimo de busqueda A*. Tipee A_ESTRELLA'
         print("\n#############################################")
@@ -69,8 +69,7 @@ class Consola(Cmd):
         print("5. Presione ESPACIO para comenzar busqueda")
         print("6. Presione C para restaurar ventana a default")
         print("#############################################\n")
-        A_estrella.ejecutaAlgoritmo()
-    """    
+        A_estrella.ejecutaAlgoritmo()   
     def do_exit(self,line):
         'Salir del programa (Apagar Robot)'
         return True
