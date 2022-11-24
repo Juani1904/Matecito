@@ -7,11 +7,12 @@ from kmeans import Kmeans
 from knn import Knn
 #Importamos la clase donde se encuentra la base de datos
 from database import Database
-
+#Importamos el modulo donde se encuentra la clase Nodo y las funciones para aplicar algoritmo A estrella
+#import A_estrella
 #Definimos la clase hija Consola, heredada de la clase padre Cmd
 class Consola(Cmd):
 
-    intro="Bienvenido a Matecito ® by Juani. Tipee help o ? para listar los comandos disponibles"
+    intro="Bienvenido a M.A.T.E.C.I.T.O ® by Juani. Tipee help o ? para listar los comandos disponibles"
     prompt="Matecito>>"
     doc_header="Lista de comandos disponibles:"
     Cmd.ruler
@@ -23,7 +24,7 @@ class Consola(Cmd):
     #Definimos los distintos metodos a los cuales podremos accesar desde la consola
 
     def do_carga_db(self,arg):
-        'Carga la base de datos.Tipee CARGA_DB'
+        'Carga la base de datos de imagenes al Robot.Tipee CARGA_DB'
         db=Database()
         self.arandela=db.arandela
         self.tuerca=db.tuerca
@@ -56,9 +57,22 @@ class Consola(Cmd):
             print ("No se ha cargado la base de datos. Intente con CARGA_DB")
         except ValueError:
             print ("No se ha cargado la base de datos. Intente con CARGA_DB")
-        
+    """
+    def do_a_estrella(self,arg):
+        'Aplica el algortimo de busqueda A*. Tipee A_ESTRELLA'
+        print("\n#############################################")
+        print("Instrucciones:")
+        print("1. Ingrese el punto de inicio con click izquierdo")
+        print("2. Ingrese el punto de destino con click izquierdo")
+        print("3. Ingrese obstaculos con click izquierdo")
+        print("4. Si se equivoca, puede borrar con click derecho")
+        print("5. Presione ESPACIO para comenzar busqueda")
+        print("6. Presione C para restaurar ventana a default")
+        print("#############################################\n")
+        A_estrella.ejecutaAlgoritmo()
+    """    
     def do_exit(self,line):
-        'Salir del programa'
+        'Salir del programa (Apagar Robot)'
         return True
     
     #Metemos un precmd para que las palabras escritas en mayuscula se conviertan en minuscula

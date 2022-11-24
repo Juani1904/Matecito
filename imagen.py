@@ -8,9 +8,6 @@ import math as m
 class Imagen:
     #La idea es tener un solo atributo imagen, y que ese atributo se vaya modificando segun lo que le vayamos
     #haciendo a la imagen
-    imagen=None
-    imagenOrig=None
-    contornos=None
     sigmaPB=0.1
     sigmaPA=0.001
     #Creamos el constructor de la clase Imagen
@@ -18,6 +15,9 @@ class Imagen:
 
         self.imagen=cv2.imread(miimagen)
         self.imagenOrig=cv2.imread(miimagen)
+        self.domFrec=cv2.imread(miimagen)
+        self.imagenfiltroPA=cv2.imread(miimagen)
+        self.imagenfiltroPB=cv2.imread(miimagen)
         #Una vez obtenida la imagen, la redimensionamos a 512x512px
         self.imagen=cv2.resize(self.imagen,(512,512))
         self.imagenOrig=cv2.resize(self.imagenOrig,(512,512))
@@ -33,8 +33,10 @@ class Imagen:
             try:
                 #Aplicamos filtro pasa bajo para eliminar el ruido
                 self.aplicarFiltro("PB")
+                self.imagenfiltroPB=self.imagen
                 #Luego aplicamos el filtro para alto para resaltar los bordes
                 self.aplicarFiltro("PA")
+                self.imagenfiltroPA=self.imagen
                 #Aplicamos la binarizacion a la imagen
                 #self.imagen=cv2.Canny(self.imagen,10,150)
                 _, self.imagen = cv2.threshold(self.imagen, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_TRIANGLE)
@@ -75,6 +77,7 @@ class Imagen:
         FiltroHmod=np.fft.fftshift(FiltroH)
         #Aplicamos transformada de Fourier 2D a la imagen
         Fimg = np.fft.fft2(self.imagen)
+        self.domFrec=Fimg
         #Generamos producto de filtro con imagen (CONVOLUCION)
         FimgFiltro = Fimg*FiltroHmod
         #Aplicamos la transformada inversa de Fourier 2D

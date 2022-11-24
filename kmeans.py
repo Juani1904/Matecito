@@ -24,15 +24,21 @@ class Kmeans:
         for filename in os.listdir("Input"):
             self.imagenes.append(Imagen("Input/"+filename))
             ind=os.listdir("Input").index(filename)
-            mostrarimg=self.imagenes[ind].imagenOrig
-            cv2.drawContours(mostrarimg,self.imagenes[ind].contornos,-1,(0,255,0),2)
-            cv2.imshow(filename,mostrarimg)
+            cv2.imshow("Imagen "+str(filename),self.imagenes[ind].imagenOrig)
+            cv2.imshow("FiltroPB "+str(filename),self.imagenes[ind].imagenfiltroPB)
+            cv2.imshow("FiltroPA "+str(filename),self.imagenes[ind].imagenfiltroPA)
+            cv2.imshow("Binarizada "+str(filename),self.imagenes[ind].imagen)
+            cv2.drawContours(self.imagenes[ind].imagenOrig,self.imagenes[ind].contornos,-1,(0,255,0),2)
+            cv2.imshow(filename,self.imagenes[ind].imagenOrig)
             cv2.waitKey(0)
-            cv2.imshow("Trazo "+str(filename),self.imagenes[ind].imagen)
-            cv2.waitKey(0)
+            fig = plt.figure("Img Dom Frecuencial "+str(filename),figsize=(4, 4))
+            plt.imshow(np.log(np.abs(self.imagenes[ind].domFrec)),cmap='gray')
+            plt.show()
+            plt.close()
+            cv2.destroyAllWindows()
             print("Imagen "+str(ind+1))
             print(self.imagenes[ind].caractVector)
-            cv2.destroyAllWindows()
+        
         #Definimos el numero de iteraciones
         self.iteraciones=10
         #Definimos los centroides
