@@ -235,9 +235,9 @@ class Knn:
         #Primero graficaremos los puntos de cada pieza
         fig = plt.figure("Grafica Knn")
         ax = fig.add_subplot(111, projection='3d')
-        ax.set_xlabel('Elasticidad')
-        ax.set_ylabel('AproxPoly')
-        ax.set_zlabel('1er Momento Hu')
+        ax.set_xlabel('AproxPoly')
+        ax.set_ylabel('1er Momento Hu')
+        ax.set_zlabel('6to Momento Hu')
         ax.set_title("Grafica Knn")
         for i in range(len(self.arandelas)):
             ax.scatter(self.arandelas[i].caractVector[0],self.arandelas[i].caractVector[1],self.arandelas[i].caractVector[2],c='red',marker='o')
@@ -262,17 +262,8 @@ class Knn:
         ax.scatter(0,0,0,c='yellow',marker='o',label='Tuerca')
         ax.scatter(0,0,0,c='k',marker='o',label='Desconocido')
         ax.legend()
-        #Graficamos las esferas (No se nota mucho porque van a ser muy chicas. Hacerle zoom)
-        
-        for i in range(len(self.piezas)):
-
-            u,v = np.mgrid[0:2*np.pi:20j, 0:np.pi:10j]
-            x=np.cos(u)*np.sin(v)
-            y=np.sin(u)*np.sin(v)
-            z=np.cos(v)
-            r=self.distEsferas[i]
-            ax.plot_wireframe(x*r+self.imagenes[i].caractVector[0], y*r+self.imagenes[i].caractVector[1], z*r+self.imagenes[i].caractVector[2], color="black")
         plt.show()
+        
 
         
 

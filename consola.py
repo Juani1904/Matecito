@@ -39,6 +39,9 @@ class Consola(Cmd):
             for i in range(int(iteraciones)):
                 self.catalog1.Graficador(i)
                 self.catalog1.catalogador()
+                print("Iteracion "+str(i+1)+"")
+                print("Centroides: ")
+                print(self.catalog1.centroide)
                 self.catalog1.recalcularCentroide()
             self.catalog1.guardarImagenes()
         except AttributeError:

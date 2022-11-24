@@ -118,7 +118,7 @@ class Imagen:
         #Si es 1 es un cuadrado perfecto, may a 1 estirado horizontal, menor a 1, estirado vertical
         _,_,ancho,alto=cv2.boundingRect(self.contornos[0])
         elasticidad=float(ancho)/alto
-        self.caractVector.append(elasticidad)
+        #self.caractVector.append(elasticidad)
 
         #Realizamos una aprox polinomial que nos servira de parametro
         #Lo que vamos a hacer es sumar al vect. de caracteristicas la cantidad de elementos de approxPoly
@@ -137,6 +137,9 @@ class Imagen:
         #Calculamos momento de Hu
         momentosHu=cv2.HuMoments(cv2.moments(self.contornos[0])).flatten()
         self.caractVector.append(momentosHu[0])
+        self.caractVector.append(momentosHu[5])
+        #self.caractVector.append(momentosHu[6])
+        
 
 
         

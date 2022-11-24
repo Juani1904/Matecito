@@ -166,39 +166,91 @@ def ejecutaAlgoritmo():
 
 	def algorithm(draw, grid, start, end):
 		count = 0
+		#Creamos la "lista" de openset. Esta se crea instanciado el objeto open_set a partir de la clase PriorityQueue
 		open_set = PriorityQueue()
+		# .put es un metodo de PriorityQueue que es equivalente al append para las listas
+		#Metemos al inicio en nuestro openset el nodo de start
+		#Tambien le metemos el count, que es una variable que me va a permitir saber luego si yo tengo 2 variables nodos iguales
+		#cual fue creada primero, para descartar la otra
 		open_set.put((0, count, start))
-		came_from = {}
-		g_score = {spot: float("inf") for row in grid for spot in row}
-		g_score[start] = 0
-		f_score = {spot: float("inf") for row in grid for spot in row}
-		f_score[start] = h(start.get_pos(), end.get_pos())
+		#Nuestro open set esta formado por: OPENSET(Fscore,COUNT,NODO), asi va a ser para todos los elementos del openset
 
+		#Came_from es un diccionario que nos sirve para asignarle a un nodo, cual es su nodo padre, o "de que nodo proviene"
+		#Esto sirve para luego aplicar el backtracking
+		came_from = {}
+		#Como vimos antes, en un principio el nodo de start tiene su valor g en 0
+		#Todos los demas nodos tendran sus valores g en infinito (y por ende f)
+		#Aca asignamos a g y a f la transformacion de string a float de la palabra "inf"
+		#Si bien no es infinito, nos sirve como referencia y sirve a nuestro proposito
+
+		#Asignamos el valor g infinito a todos los nodos 
+		g_score = {nodo: float("inf") for fila in grid for nodo in fila}
+		#Modificamos el valor g del nodo start a 0
+		g_score[start] = 0
+		#Asignamos el valor f infinito a todos los nodos
+		f_score = {nodo: float("inf") for fila in grid for nodo in fila}
+		#Modificamos el valor f del nodo start y lo igualamos a la heuristica( ya que f= g + h y g=0 -> f=h)
+		f_score[start] = h(start.get_pos(), end.get_pos())
+		
+		#El diccionario open_set_hash va guardando el nodo actual. Logicamente empezamos con el primer nodo
 		open_set_hash = {start}
 
+		#Este while basicamente hace que nuestro algoritmo comience a actuar
+		#Si nuestro openset esta vacio, significaria que consideramos todos los nodos vecinos y no hay camino
+		#posible para seguir.Esto podria pasarnos tanto al inicio(Si estuvieramos rodeados de obstaculos en nuestro nodo start)
+		#o podria pasarnos en medio de la busqueda, si los obstaculos no permitieran llegar de A a B de ningun modo
+		#En ese caso el algoritmo llegaria hasta donde puede y se pararia, teniendo que empezar denuevo
 		while not open_set.empty():
+			#Revisamos los event que vayan llegando. A diferencia de cuando revisabamos esto antes
+			#Antes lo haciamos cuando el algoritmo aun no iniciaba, ahora estamos analizando los eventos
+			#MIENTRAS que el algoritmo se desarrolla
 			for event in pygame.event.get():
+				#Si el evento es de salir, salimos del programa
 				if event.type == pygame.QUIT:
 					pygame.quit()
 
+			#Extraemos el 3er elemento de nuestro openset, osea, el nodo
+			#Basicamente current sera el nodo actual (es un objeto nodo)
 			current = open_set.get()[2]
+			#Removemos el actual del open_set_hash para darle paso al siguiente nodo a analizar
 			open_set_hash.remove(current)
 
+			#Si el siguiente nodo es el nodo objetivo, paramos la busqueda y aplicamos el algoritmo de backtraking
+			#dado por la funcion reconstruct_path()
 			if current == end:
 				reconstruct_path(came_from, end, draw)
 				end.make_end()
 				return True
 
+			#Si no es el nodo objetivo, lo consideramos simplemente como un nodo que tengo que analizar
+			#Recordemos que con la funcion update_neighbors le asignabamos a una lista atributo "vecinos" los nodos
+			#que rodean a mi nodo actual y que son recorribles(es decir, no son un obstaculo)
+			#Por ende aca analizamos los vecinos del nodo actual(current) que SI son recorribles
 			for neighbor in current.vecinos:
+				#Creamos una variable g_score temporal que sea igual al costo del camino actual +1
+				#Lo que seria equivalente a decir el costo del camino mas pequeño al vecino (hay mil formas de llegar al nodo vecino
+				# pero dar un solo paso es el que tiene costo de camino mas pequeño)
 				temp_g_score = g_score[current] + 1
 
+				#Establecemos una condicion que dice que, si este costo g temporal es menor que el costo g de mis vecinos (mejor)
+				#entonces actualizamos el valor del costo g de mi vecino a el valor del g temporal
+				#Logicamente, como en un inicio seteamos todos los valores g de todos los nodos distintos del nodo inicial en infinito,
+				#esta condicion se cumplira con cada nodo nuevo, no recorrido
 				if temp_g_score < g_score[neighbor]:
+					#Actualizamos el nodo padre de dicho vecino, el cual sera nuestro nodo actual
 					came_from[neighbor] = current
+					#Actualizamos el g_score del vecino
 					g_score[neighbor] = temp_g_score
-					f_score[neighbor] = temp_g_score + \
-						h(neighbor.get_pos(), end.get_pos())
+					#Actualizamos el f_score del vecino
+					f_score[neighbor] = temp_g_score + h(neighbor.get_pos(), end.get_pos())
+					#Finalmente, si el programa compilo bien, deberiamos entrar en esta condicion
+					# ya que previamente sacamos el current del open_set_hash y no metimos nunca al vecino
+					#Aca entendemos el por que usamos open_set_hash y no solamente open_set, debido a que el objeto PriorityQueue
+					#no tiene un metodo para ver si un elemento esta dentro de el o no, simplemente podemos meter o sacar un elemento, no chequear si esta
 					if neighbor not in open_set_hash:
+						#Aumentamos el contador porque metimos algo dentro del open_set
 						count += 1
+						#Metemos el valor f del vecino, el nuevo count y el objeto nodo del vecino
 						open_set.put((f_score[neighbor], count, neighbor))
 						open_set_hash.add(neighbor)
 						neighbor.make_open()

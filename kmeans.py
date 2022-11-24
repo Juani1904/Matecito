@@ -201,9 +201,9 @@ class Kmeans:
         #que se vayan formando y los centroides (y su recalculo)
         fig = plt.figure("Grafica Kmeans")
         ax = fig.add_subplot(111, projection='3d')
-        ax.set_xlabel('Elasticidad')
-        ax.set_ylabel('AproxPoly')
-        ax.set_zlabel('1er Momento Hu')
+        ax.set_xlabel('AproxPoly')
+        ax.set_ylabel('1er Momento Hu')
+        ax.set_zlabel('6to Momento Hu')
         ax.set_title("Grafica Kmeans. Iteracion "+str(iteracion+1))
         #Colocamos una leyenda para clasificar las piezas por su color
         ax.scatter(0,0,0,c="red",marker="o",label="Arandela")
