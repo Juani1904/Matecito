@@ -124,7 +124,7 @@ class Imagen:
         #Lo que vamos a hacer es sumar al vect. de caracteristicas la cantidad de elementos de approxPoly
         #Este numero de elementos corresponde a los "vertices de la figura"
         #Esto es especialmente util para diferencial la arandela de la tuerca
-        epsilon=0.05*cv2.arcLength(self.contornos[0],True)
+        epsilon=0.03*cv2.arcLength(self.contornos[0],True)
         approxPoly=cv2.approxPolyDP(self.contornos[0],epsilon,True)
         self.caractVector.append(len(approxPoly))
 
