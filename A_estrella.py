@@ -156,7 +156,7 @@ def ejecutaAlgoritmo():
 		x2, y2 = p2
 		return abs(x1 - x2) + abs(y1 - y2)
 
-
+	#Funcion para reconstruir el camino (algoritmo de backtracking)
 	def reconstruct_path(came_from, current, draw):
 		while current in came_from:
 			current = came_from[current]
@@ -250,16 +250,21 @@ def ejecutaAlgoritmo():
 					if neighbor not in open_set_hash:
 						#Aumentamos el contador porque metimos algo dentro del open_set
 						count += 1
-						#Metemos el valor f del vecino, el nuevo count y el objeto nodo del vecino
+						#Metemos el valor f del vecino, el nuevo count y el objeto nodo del vecino en el openset
 						open_set.put((f_score[neighbor], count, neighbor))
+						#Añadimos al openset hash el nodo vecino para poder hacerle track de si esta o no esta
 						open_set_hash.add(neighbor)
 						neighbor.make_open()
 
+			#Llamamos a la funcion lambda draw,que pasamos como parametro en la definicion de esta funcion algorithm
+			#La llamamos para poder setear el nodo que acabamos de analizar en rojo (closedset)
 			draw()
-
+			#Despues de todo esto, si current no es el nodo de start (porque tiene otro color), le digo
+			#al programa que setee el nodo actual (que acabo de analizar) en rojo, de esta manera pasa a ser del closedset (ya analizado)
 			if current != start:
 				current.make_closed()
 
+		#Esto es para decir, aun no encontramos el camino
 		return False
 
 	# Funcion para construir la cuadricula con los nodos en la ventana que creamos anteriormente
