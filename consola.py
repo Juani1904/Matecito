@@ -77,7 +77,7 @@ class Consola(Cmd):
     
     def do_strips(self,arg):
         'Ejecuta el plan en lenguaje STRIPS mediante FASTDOWNWARD.Tipee STRIPS'
-        output = subprocess.check_output("cd Planificacion/downward && ./fast-downward.py domain.pddl problem.pddl --search \"astar(lmcut())\"", shell=True)
+        output = subprocess.check_output("cd Planificacion/downward && ./fast-downward.py ../domain.pddl ../problem.pddl --search \"astar(lmcut())\"", shell=True)
         listaoutput=output.decode("utf-8").split("\n")
         target1='poner'
         target2='sacar'
