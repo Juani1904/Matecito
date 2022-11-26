@@ -1,5 +1,6 @@
 #En este espacio vamos a programar una consola donde el usuario podra interactuar
 #con el programa y aplicar los distintos metodos de segmentacion
+import subprocess
 from cmd import Cmd
 #Importamos el modulo donde hacemos la definicion de la clase Kmeans
 from kmeans import Kmeans
@@ -72,7 +73,34 @@ class Consola(Cmd):
         print("5. Presione ESPACIO para comenzar busqueda")
         print("6. Presione C para restaurar ventana a default")
         print("#############################################\n")
-        A_estrella.ejecutaAlgoritmo()   
+        A_estrella.ejecutaAlgoritmo()
+    
+    def do_strips(self,arg):
+        'Ejecuta el plan en lenguaje STRIPS mediante FASTDOWNWARD.Tipee STRIPS'
+        output = subprocess.check_output("cd Planificacion/downward && ./fast-downward.py domain.pddl problem.pddl --search \"astar(lmcut())\"", shell=True)
+        listaoutput=output.decode("utf-8").split("\n")
+        target1='poner'
+        target2='sacar'
+        print("El plan trazado es: ")
+        contador=0
+        print("\n")
+        for elemento in listaoutput:
+            if target1 in elemento:
+                print(elemento)
+                contador+=1
+                
+            elif target2 in elemento:
+                print(elemento)
+                contador+=1
+        print("\n")
+        print("El costo del camino es: ",end="")
+        print(contador,end=" ")
+        print("unidades")
+            #Printear el costo del camino sin salto de linea
+            
+
+        #system("~$ cd /home/juani/Documentos/cursos-de-programacion/IA/\"Trabajo Final\"/Codificacion")
+
     def do_exit(self,line):
         'Salir del programa (Apagar Robot)'
         return True
