@@ -7,6 +7,7 @@ import os
 from imagen import Imagen
 from random import randint
 import time
+from natsort import natsorted
 
 
 class Kmeans:
@@ -21,9 +22,11 @@ class Kmeans:
         #Ahora instanciamos las imagenes desconocidas de la carpeta input
         #Inicializamos el vector de imagenes
         self.imagenes=[]
-        for filename in os.listdir("Input"):
+        archivos=natsorted(os.listdir("Input"))
+        print(archivos)
+        for filename in archivos:
             self.imagenes.append(Imagen("Input/"+filename))
-            ind=os.listdir("Input").index(filename)
+            ind=archivos.index(filename)
             cv2.imshow("Imagen "+str(filename),self.imagenes[ind].imagenOrig)
             cv2.imshow("FiltroPB "+str(filename),self.imagenes[ind].imagenfiltroPB)
             cv2.imshow("FiltroPA "+str(filename),self.imagenes[ind].imagenfiltroPA)

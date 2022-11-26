@@ -6,7 +6,7 @@ import math as m
 import os
 from imagen import Imagen
 from random import randint
-
+from natsort import natsorted
 #Ahora vamos a definir la clase Knn
 
 class Knn:
@@ -22,9 +22,10 @@ class Knn:
         #Ahora instanciamos las imagenes desconocidas de la carpeta input
         #Inicializamos el vector de imagenes
         self.imagenes=[]
-        for filename in os.listdir("Input"):
+        archivos=natsorted(os.listdir("Input"))
+        for filename in archivos:
             self.imagenes.append(Imagen("Input/"+filename))
-            ind=os.listdir("Input").index(filename)
+            ind=archivos.index(filename)
             cv2.imshow("Imagen "+str(filename),self.imagenes[ind].imagenOrig)
             cv2.imshow("FiltroPB "+str(filename),self.imagenes[ind].imagenfiltroPB)
             cv2.imshow("FiltroPA "+str(filename),self.imagenes[ind].imagenfiltroPA)

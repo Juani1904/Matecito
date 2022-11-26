@@ -26,8 +26,11 @@ class Imagen:
         #Establecemos el tipo de dato de intensidad como float
         self.imagen=np.float64(self.imagen)
         #Aplicamos erosion y dilatacion
+        #La erosion sirve para expandir la parte negra de la imagen binarizada. Si hay ruidos no eliminados mediante el filtro PB
+        #se expande la parte negra de la imagen y se eliminan esos ruidos
         #La dilatacion sirve para expandir los bordes de la imagen. Incrementa la parte blanca de la imagen binarizada
-        #La erosion sirve para expandir la parte negra de la imagen binarizada.
+        #Aplicamos la erosion y luego la dilatacion para ensanchar los bordes blancos, dado que la erosion los hizo mas chicos
+        #y corremos el riesgo de que alguna parte sea eliminada y no nos tome bien el contorno
         kernel=np.ones((3,3),np.uint8)
         self.imagen=cv2.erode(self.imagen,kernel,iterations=1)
         self.imagen=cv2.dilate(self.imagen,kernel,iterations=1)
@@ -57,6 +60,7 @@ class Imagen:
         
 
     def aplicarFiltro(self,tipo):
+        #Primero definimos el R, el cual es el exponente de la funcion de filtro Gaussiano
         F1=np.arange(-256,256,1)
         F2=np.arange(-256,256,1)
         [X,Y]=np.meshgrid(F1,F2)
