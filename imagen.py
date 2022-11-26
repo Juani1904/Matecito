@@ -25,8 +25,12 @@ class Imagen:
         self.imagen=cv2.cvtColor(self.imagen,cv2.COLOR_RGB2GRAY)
         #Establecemos el tipo de dato de intensidad como float
         self.imagen=np.float64(self.imagen)
-        #Aplicamos el preprocesamiento
-        self.preProcesamiento()
+        #Aplicamos erosion y dilatacion
+        #La dilatacion sirve para expandir los bordes de la imagen. Incrementa la parte blanca de la imagen binarizada
+        #La erosion sirve para expandir la parte negra de la imagen binarizada.
+        kernel=np.ones((3,3),np.uint8)
+        self.imagen=cv2.erode(self.imagen,kernel,iterations=1)
+        self.imagen=cv2.dilate(self.imagen,kernel,iterations=1)
         #Creamos un manejo de excepcion para solucionar el error ZeroDivision
         #Si la imagen no toma bien el contorno y por ende el perimetro, se ajusta la frec. de corte de los filtros
         while(True):
@@ -51,14 +55,6 @@ class Imagen:
                 self.sigmaPA+=0.001
                 continue
         
-        
-    def preProcesamiento(self):
-        #Aca vamos a aplicar funciones de dilatacion y erosion para mejorar algunos aspectos de la imagen
-        #Estos aspectos a mejorar me van a permitir que el algoritmo identifique bien y cierre los perimetros de las figuras
-        #De esta manera me aseguro que las figuran tengan perimetros cerrados y no haya error en la toma de puntos de contorno
-        #Aplicamos erode y dilate
-        self.imagen=cv2.erode(self.imagen,np.ones((3,3),np.uint8),iterations=1)
-        self.imagen=cv2.dilate(self.imagen,np.ones((3,3),np.uint8),iterations=1)
 
     def aplicarFiltro(self,tipo):
         F1=np.arange(-256,256,1)
