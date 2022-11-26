@@ -6,7 +6,6 @@ import math as m
 import os
 from imagen import Imagen
 from random import randint
-import time
 from natsort import natsorted
 
 
@@ -23,7 +22,6 @@ class Kmeans:
         #Inicializamos el vector de imagenes
         self.imagenes=[]
         archivos=natsorted(os.listdir("Input"))
-        print(archivos)
         for filename in archivos:
             self.imagenes.append(Imagen("Input/"+filename))
             ind=archivos.index(filename)
@@ -186,7 +184,6 @@ class Kmeans:
             os.remove("Output/Kmeans/"+archivo)
         #Ahora guardamos las imagenes
         for imagen in self.imagenes:
-            time.sleep(1)
             i=self.imagenes.index(imagen)
             if self.etiquetas[20+i]=="Arandela":
                 cv2.imwrite("Output/Kmeans/"+str(i+1)+".Arandela.jpg",imagen.imagenOrig)
@@ -198,7 +195,6 @@ class Kmeans:
                 cv2.imwrite("Output/Kmeans/"+str(i+1)+".Tornillo.jpg",imagen.imagenOrig)
         
         print("Imagenes guardadas en la carpeta Output/Kmeans")
-    
     def Graficador(self,iteracion):
         #En este metodo graficador lo que haremos sera ir graficando con distintos colores los clusters
         #que se vayan formando y los centroides (y su recalculo)

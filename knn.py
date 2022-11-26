@@ -227,6 +227,7 @@ class Knn:
                 #cv2.imwrite("Output/Knn/"+str(i+1)+".Desconocido.jpg",imagen.imagenOrig)
         
         print("Imagenes guardadas en la carpeta Output/Knn")
+        
     
     def Graficador(self):
         #En este metodo graficaremos los puntos de cada pieza con distintos colores
