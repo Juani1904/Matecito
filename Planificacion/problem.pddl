@@ -1,16 +1,16 @@
 ;Definimos el problema, modificable segun el orden inicial que se de en el examen final y el orden final que se pida
-;En este caso el orden inicial es, de arriba hacia abajo Arandela->Tuerca->Clavo->Tornillo
-;Queremos llegar a  Tuerca->Tornillo->Arandela->Clavo
+;En este caso el orden inicial es, de arriba hacia abajo Tuercas->Clavos->Arandelas->Tornillo
+;Queremos llegar a  Arandelas->Tuercas->Tornillos->Clavos
 (define (problem orden-cajas-problema) (:domain orden-cajas2)
-    (:objects arandelas tuercas clavos tornillos)
+    (:objects arandelas tuercas clavos tornillos base1)
     (:init
-        (caja arandelas) (caja tuercas) (caja clavos) (caja tornillos)
-        (sobre arandelas tuercas) (sobre tuercas clavos) (sobre clavos tornillos)
-     	(desapilado tornillos) (nadaEncima arandelas)
+        (caja arandelas) (caja tuercas) (caja clavos) (caja tornillos) (basepos base1)
+        (sobre tuercas clavos) (sobre clavos arandelas) (sobre arandelas tornillos)
+     	(base tornillos) (nadaEncima tuercas) (not(clear base1))
     )
     (:goal (
         and
-        (sobre tuercas tornillos) (sobre tornillos arandelas) (sobre arandelas clavos)
+        (sobre arandelas tuercas) (sobre tuercas tornillos) (sobre tornillos clavos) (base clavos)
         )
     )
 )
