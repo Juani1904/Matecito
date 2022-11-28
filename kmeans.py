@@ -40,8 +40,7 @@ class Kmeans:
             print("Imagen "+str(ind+1))
             print(self.imagenes[ind].caractVector)
         
-        #Definimos el numero de iteraciones
-        self.iteraciones=10
+       
         #Definimos los centroides
         self.randomSelectCentroide()
         #Definimos el vector de etiquetas

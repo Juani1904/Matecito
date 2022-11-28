@@ -2,6 +2,7 @@
 #con el programa y aplicar los distintos metodos de segmentacion
 import subprocess
 from cmd import Cmd
+import time
 #Importamos el modulo donde hacemos la definicion de la clase Kmeans
 from kmeans import Kmeans
 #Importamos el modulo donde hacemos la definicion de la clase Knn
@@ -114,6 +115,16 @@ class Consola(Cmd):
     #Mensaje por defecto cuando le damos enter sin escribir nada primero
     def emptyline(self):
         pass
+    #Generamos un preloop de barra de carga, como si el software se estuviera cargando en la memoria del robot
+    def preloop(self):
+        print("Iniciando...")
+        time.sleep(1)
+        for i in range(0,101):
+            time.sleep(0.05)
+            print("Cargando software a Robot IA...[%d%%]" % i, end="\r")
+        print("Cargando software a Robot IA...[100%]")
+        time.sleep(0.5)
+        
     
         
             

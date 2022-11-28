@@ -144,7 +144,7 @@ class Knn:
         #Para graficar las esferas creamos el siguiente vector
         #Cuando salgamos de la funcion clasificador, los valores del vector corresponderan
         #a los radios de las esferas, que seran las distancias al vecino mas lejano de los K considerados
-        self.distEsferas=[min(distimg1),min(distimg2),min(distimg3),min(distimg4)]
+        #self.distEsferas=[min(distimg1),min(distimg2),min(distimg3),min(distimg4)]
 
         #Ahora vemos cuantas veces aparece cada elemento en las respuestas
         #Las cantidades las almacenamos en diccionarios cuyo nombre clave es el de cada pieza

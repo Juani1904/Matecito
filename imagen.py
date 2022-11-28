@@ -97,7 +97,6 @@ class Imagen:
         self.contornos = sorted(self.contornos,key=cv2.contourArea,reverse=True)[:1]
         # Defectos convexos
         self.hull = cv2.convexHull(self.contornos[0],returnPoints=True)
-        #self.defectosConvex = cv2.convexityDefects(self.contornos[0],self.hull)
 
 
     def getCaractVector(self):
