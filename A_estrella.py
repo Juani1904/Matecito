@@ -18,7 +18,7 @@ def ejecutaAlgoritmo():
 	# Definimos los distintos colores en escala RGB
 	ROJO = (255, 0, 0)
 	VERDE = (0, 255, 0)
-	AZUL = (0, 255, 0)
+	AZUL = (0, 0, 255)
 	AMARILLO = (255, 255, 0)
 	BLANCO = (255, 255, 255)
 	NEGRO = (0, 0, 0)
@@ -209,7 +209,7 @@ def ejecutaAlgoritmo():
 				if event.type == pygame.QUIT:
 					pygame.quit()
 
-			#Extraemos el 3er elemento de nuestro openset, osea, el nodo
+			#Extraemos el 3er elemento de nuestro openset, osea, el objeto nodo
 			#Basicamente current sera el nodo actual (es un objeto nodo)
 			current = open_set.get()[2]
 			#Removemos el actual del open_set_hash para darle paso al siguiente nodo a analizar
