@@ -38,13 +38,16 @@ class Consola(Cmd):
         #Agregamos una excepcion. Si no se carga la DB no se puede acceder al metodo
         try:
             self.catalog1=Kmeans(self.arandela,self.tuerca,self.clavo,self.tornillo)
+            self.catalog1.Graficador(-1)
             for i in range(int(iteraciones)):
-                self.catalog1.Graficador(i)
                 self.catalog1.catalogador()
                 print("Iteracion "+str(i+1)+"")
                 print("Centroides: ")
                 print(self.catalog1.centroide)
+                if i==0:
+                    self.catalog1.Graficador(-1)
                 self.catalog1.recalcularCentroide()
+                self.catalog1.Graficador(i)
             self.catalog1.guardarImagenes()
         except AttributeError:
             print ("No se ha cargado la base de datos. Intente con CARGA_DB")
