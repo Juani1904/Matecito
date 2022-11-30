@@ -6,8 +6,6 @@ from consola import Consola
 
 if __name__ == "__main__":
 
-    
-    #**En este espacio luego implementaremos la clase Algoritmo A**
 
     #Instanciamos el objeto consola, donde manejaremos todo
     consola=Consola()

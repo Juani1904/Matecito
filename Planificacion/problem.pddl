@@ -5,12 +5,12 @@
     (:objects arandelas tuercas clavos tornillos base1)
     (:init
         (caja arandelas) (caja tuercas) (caja clavos) (caja tornillos) (basepos base1)
-        (sobre tuercas clavos) (sobre clavos arandelas) (sobre arandelas tornillos)
-     	(base tornillos) (nadaEncima tuercas) (not(clear base1))
+        (sobre tuercas tornillos) (sobre tornillos clavos) (sobre clavos arandelas)
+     	(base arandelas) (nadaEncima tuercas) (not(clear base1))
     )
     (:goal (
         and
-        (sobre arandelas tuercas) (sobre tuercas tornillos) (sobre tornillos clavos) (base clavos)
+        (sobre arandelas tornillos) (sobre tornillos tuercas) (sobre tuercas clavos) (base clavos)
         )
     )
 )

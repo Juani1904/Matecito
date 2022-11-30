@@ -103,8 +103,6 @@ class Consola(Cmd):
             #Printear el costo del camino sin salto de linea
             
 
-        #system("~$ cd /home/juani/Documentos/cursos-de-programacion/IA/\"Trabajo Final\"/Codificacion")
-
     def do_exit(self,line):
         'Salir del programa (Apagar Robot)'
         return True
@@ -114,7 +112,12 @@ class Consola(Cmd):
         return line.lower()
     #Mensaje por defecto cuando ponemos un comando incorrecto
     def default(self):
-        print("Comando no reconocido. Ingrese help <comando> para ver su sintaxis")
+        try:
+            print("Comando no reconocido. Ingrese help <comando> para ver su sintaxis")
+        except AttributeError:
+            print("Comando no reconocido. Ingrese help <comando> para ver su sintaxis")
+        except TypeError:
+            print("Comando no reconocido. Ingrese help <comando> para ver su sintaxis")
     #Mensaje por defecto cuando le damos enter sin escribir nada primero
     def emptyline(self):
         pass

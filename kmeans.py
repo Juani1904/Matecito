@@ -230,7 +230,7 @@ class Kmeans:
                 elif self.etiquetas[i]=="Desconocido":
                     ax.scatter(self.puntos[i][0],self.puntos[i][1],self.puntos[i][2],c="black",marker="o")
             else:
-                continue
+               continue
         #Ahora los puntos, cuando esten clasificados iran en el color de su cluster
         
         plt.show()
